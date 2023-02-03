@@ -174,7 +174,7 @@ needed?** [Choose Project Idea From This List](https://docs.google.com/document/
           ),
         );
       },
-   ); }
+      ); }
       ```
     - Video playback state
       ```dart
