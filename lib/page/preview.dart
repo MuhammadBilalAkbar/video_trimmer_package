@@ -36,7 +36,7 @@ class _PreviewState extends State<Preview> {
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
-          title: const Text("Preview"),
+          title: const Text('Preview'),
         ),
         body: Center(
           child: AspectRatio(

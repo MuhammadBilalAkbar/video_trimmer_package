@@ -66,7 +66,7 @@ class _TrimmerViewState extends State<TrimmerView> {
         child: Scaffold(
           backgroundColor: Colors.black,
           appBar: AppBar(
-            title: const Text("Video Trimmer"),
+            title: const Text('Video Trimmer'),
           ),
           body: Center(
             child: Container(
@@ -85,17 +85,19 @@ class _TrimmerViewState extends State<TrimmerView> {
                     onPressed: _progressVisibility
                         ? null
                         : () async {
-                            _saveVideo().then((outputPath) {
-                              print('OUTPUT PATH: $outputPath');
-                              final snackBar = SnackBar(
-                                  content: Text(
-                                      'Video Saved successfully\n$outputPath'));
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                snackBar,
-                              );
-                            });
+                            _saveVideo().then(
+                              (outputPath) {
+                                print('OUTPUT PATH: $outputPath');
+                                final snackBar = SnackBar(
+                                    content: Text(
+                                        'Video Saved successfully\n$outputPath'));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  snackBar,
+                                );
+                              },
+                            );
                           },
-                    child: const Text("SAVE"),
+                    child: const Text('SAVE'),
                   ),
                   Expanded(
                     child: VideoViewer(trimmer: _trimmer),
@@ -110,8 +112,9 @@ class _TrimmerViewState extends State<TrimmerView> {
                         durationStyle: DurationStyle.FORMAT_MM_SS,
                         // maxVideoLength: const Duration(seconds: 10),
                         maxVideoLength: Duration(
-                            seconds: _trimmer.videoPlayerController!.value
-                                .duration.inSeconds),
+                          seconds: _trimmer
+                              .videoPlayerController!.value.duration.inSeconds,
+                        ),
                         editorProperties: TrimEditorProperties(
                           borderPaintColor: Colors.yellow,
                           borderWidth: 4,
@@ -123,8 +126,9 @@ class _TrimmerViewState extends State<TrimmerView> {
                         ),
                         onChangeStart: (value) => _startValue = value,
                         onChangeEnd: (value) => _endValue = value,
-                        onChangePlaybackState: (value) =>
-                            setState(() => _isPlaying = value),
+                        onChangePlaybackState: (value) => setState(
+                          () => _isPlaying = value,
+                        ),
                       ),
                     ),
                   ),

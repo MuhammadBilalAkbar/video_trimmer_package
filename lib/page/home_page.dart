@@ -11,11 +11,11 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text("Video Trimmer"),
+          title: const Text('Video Trimmer'),
         ),
         body: Center(
           child: ElevatedButton(
-            child: const Text("LOAD VIDEO"),
+            child: const Text('LOAD VIDEO'),
             onPressed: () async {
               FilePickerResult? result = await FilePicker.platform.pickFiles(
                 type: FileType.video,
