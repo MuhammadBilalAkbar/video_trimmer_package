@@ -1,10 +1,4 @@
-**Watch this video to learn how to fill this template
-below:** https://www.youtube.com/watch?v=m63oH2RUvjc
-
-**Any new Flutter Project ideas
-needed?** [Choose Project Idea From This List](https://docs.google.com/document/d/1e42zZoIfJZyCBzrTzxv28fSsN0KFrMN6SDzDVBM67tc/edit?usp=sharing)
-
-## 1. Research: Project Title
+## 1. Research: Video Trimmer Package
 
 - Keywords:
     - video trimmer flutter
