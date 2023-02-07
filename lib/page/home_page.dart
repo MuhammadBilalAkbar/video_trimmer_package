@@ -5,9 +5,14 @@ import 'package:file_picker/file_picker.dart';
 
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
@@ -17,14 +22,17 @@ class HomePage extends StatelessWidget {
           child: ElevatedButton(
             child: const Text('LOAD VIDEO'),
             onPressed: () async {
-              FilePickerResult? result = await FilePicker.platform.pickFiles(
+              final result = await FilePicker.platform.pickFiles(
                 type: FileType.video,
                 allowCompression: false,
               );
               if (result != null) {
-                File file = File(result.files.single.path!);
+                final file = File(result.files.single.path!);
+                if (!mounted) return;
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => TrimmerView(file)),
+                  MaterialPageRoute(
+                    builder: (context) => TrimmerView(file),
+                  ),
                 );
               }
             },

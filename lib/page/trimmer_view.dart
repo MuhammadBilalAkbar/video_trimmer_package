@@ -14,7 +14,7 @@ class TrimmerView extends StatefulWidget {
 }
 
 class _TrimmerViewState extends State<TrimmerView> {
-  final Trimmer _trimmer = Trimmer();
+  final _trimmer = Trimmer();
 
   double _startValue = 0.0;
   double _endValue = 0.0;
@@ -87,13 +87,13 @@ class _TrimmerViewState extends State<TrimmerView> {
                         : () async {
                             _saveVideo().then(
                               (outputPath) {
-                                print('OUTPUT PATH: $outputPath');
+                                debugPrint('OUTPUT PATH: $outputPath');
                                 final snackBar = SnackBar(
-                                    content: Text(
-                                        'Video Saved successfully\n$outputPath'));
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  snackBar,
+                                  content: Text(
+                                      'Video Saved successfully\n$outputPath'),
                                 );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
                               },
                             );
                           },
@@ -110,7 +110,6 @@ class _TrimmerViewState extends State<TrimmerView> {
                         viewerHeight: 50.0,
                         viewerWidth: MediaQuery.of(context).size.width,
                         durationStyle: DurationStyle.FORMAT_MM_SS,
-                        // maxVideoLength: const Duration(seconds: 10),
                         maxVideoLength: Duration(
                           seconds: _trimmer
                               .videoPlayerController!.value.duration.inSeconds,
@@ -121,9 +120,8 @@ class _TrimmerViewState extends State<TrimmerView> {
                           borderRadius: 5,
                           circlePaintColor: Colors.yellow.shade800,
                         ),
-                        areaProperties: TrimAreaProperties.edgeBlur(
-                          thumbnailQuality: 10,
-                        ),
+                        areaProperties:
+                            TrimAreaProperties.edgeBlur(thumbnailQuality: 10),
                         onChangeStart: (value) => _startValue = value,
                         onChangeEnd: (value) => _endValue = value,
                         onChangePlaybackState: (value) => setState(
@@ -145,7 +143,7 @@ class _TrimmerViewState extends State<TrimmerView> {
                             color: Colors.white,
                           ),
                     onPressed: () async {
-                      bool playbackState = await _trimmer.videoPlaybackControl(
+                      final playbackState = await _trimmer.videoPlaybackControl(
                         startValue: _startValue,
                         endValue: _endValue,
                       );
