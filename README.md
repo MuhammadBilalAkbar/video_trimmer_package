@@ -88,38 +88,95 @@
    now.
 2. `home_page.dart` picks a file/video from file manager using `file_picker` package and pass this
    as argument to `trimmer_view.dart`.
-    ```dart
-           appBar: AppBar(
-          title: const Text("Video Trimmer"),
+```dart 
+        appBar: AppBar(
+          title: const Text('Video Trimmer'),
         ),
         body: Center(
           child: ElevatedButton(
-            child: const Text("LOAD VIDEO"),
+            child: const Text('LOAD VIDEO'),
             onPressed: () async {
-              FilePickerResult? result = await FilePicker.platform.pickFiles(
+              final result = await FilePicker.platform.pickFiles(
                 type: FileType.video,
                 allowCompression: false,
               );
               if (result != null) {
-                File file = File(result.files.single.path!);
+                final file = File(result.files.single.path!);
+                if (!mounted) return;
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => TrimmerView(file)),
+                  MaterialPageRoute(
+                    builder: (context) => TrimmerView(file),
+                  ),
                 );
               }
             },
           ),
+        ),
+```
+3. `trimmer_view.dart` accepts `file` from `home_page.dart` file picker plugin and loads it on `trimmer_view.dart` screen.
+    - First initialize these arguments:
+   ```dart
+    final _trimmer = Trimmer();
+
+    double _startValue = 0.0;
+    double _endValue = 0.0;
+
+    bool _isPlaying = false;
+    bool _progressVisibility = false;
+   ```
+    - Call `_trimmer.loadVideo(videoFile: widget.file)` in `initState()` method to load video that is to be trimmed.
+    - This is `_saveVideo()` method:
+   ```dart
+   _saveVideo() {
+   setState(() {
+    _progressVisibility = true;
+    });
+
+    _trimmer.saveTrimmedVideo(
+      startValue: _startValue,
+      endValue: _endValue,
+      onSave: (outputPath) {
+        setState(() {
+          _progressVisibility = false;
+        });
+
+        debugPrint('OUTPUT PATH: $outputPath');
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => Preview(outputPath),
+          ),
+        );
+      },
+    );
+    }
     ```
-3. `trimmer_view.dart`
-    - Loads input video file.
-      ```dart
-      final Trimmer _trimmer = Trimmer();
-      await _trimmer.loadVideo(videoFile: file);
-      ```
-    - VideoViewer
-      ```dart
+    - We call `_saveVideo()` method on a button named 'SAVE':
+   ```dart 
+                  ElevatedButton(
+                    onPressed: _progressVisibility
+                        ? null
+                        : () async {
+                            _saveVideo().then(
+                              (outputPath) {
+                                debugPrint('OUTPUT PATH: $outputPath');
+                                final snackBar = SnackBar(
+                                  content: Text(
+                                      'Video Saved successfully\n$outputPath'),
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              },
+                            );
+                          },
+                    child: const Text('SAVE'),
+                  ),
+   ```
+    - After this, there is VideoViewer which is part of `video_trimmer_package` which uses `video_player` plugin to play the video.
+      ```dart 
       VideoViewer(trimmer: _trimmer);
       ```
-    - TrimViewer
+    - `TrimViewer` requires `trimmer` and other properties like viewHeight, viewerWidth, durationStyle, maxVideoLength, editorProperties, onChangeStart, onChangeEnd, and onChangePlaybackState are optional.
+
       ````dart
       TrimViewer(
                         trimmer: _trimmer,
@@ -146,38 +203,47 @@
                             setState(() => _isPlaying = value),
                       ),
        ```
-    - Save trimmed video
-      ```dart
-       _saveVideo() {
-        setState(() {
-        _progressVisibility = true;
-        });
-      _trimmer.saveTrimmedVideo(
-      startValue: _startValue,
-      endValue: _endValue,
-
-      onSave: (outputPath) {
-        setState(() {
-          _progressVisibility = false;
-        });
-
-        debugPrint('OUTPUT PATH: $outputPath');
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => Preview(outputPath),
-          ),
-        );
-      },
-      ); }
-      ```
-    - Video playback state
-      ```dart
-      await _trimmer.videoPlaybackControl(
+    - In last there is `TextButton` with icon of play or pause.
+   ```dart 
+                  TextButton(
+                    child: _isPlaying
+                        ? const Icon(
+                            Icons.pause,
+                            size: 80.0,
+                            color: Colors.white,
+                          )
+                        : const Icon(
+                            Icons.play_arrow,
+                            size: 80.0,
+                            color: Colors.white,
+                          ),
+                    onPressed: () async {
+                      final playbackState = await _trimmer.videoPlaybackControl(
                         startValue: _startValue,
                         endValue: _endValue,
                       );
-      ```
+                      setState(() => _isPlaying = playbackState);
+                    },
+                  ),
+   ```
     - You can use an advanced FFmpeg command if you require more customization. Just define your
       FFmpeg command using the `ffmpegCommand` property and set an output video format
       using `customVideoFormat`.
 4. `preview.dart` plays the video which is trimmed and saved in files of phone.
+   ```dart 
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          title: const Text('Preview'),
+        ),
+        body: Center(
+          child: AspectRatio(
+            aspectRatio: _controller.value.aspectRatio,
+            child: _controller.value.isInitialized
+                ? VideoPlayer(_controller)
+                : const Center(
+                    child: CircularProgressIndicator(
+                        backgroundColor: Colors.white),
+                  ),
+          ),
+        ),
+   ```

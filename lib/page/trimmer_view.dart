@@ -149,7 +149,7 @@ class _TrimmerViewState extends State<TrimmerView> {
                       );
                       setState(() => _isPlaying = playbackState);
                     },
-                  )
+                  ),
                 ],
               ),
             ),
