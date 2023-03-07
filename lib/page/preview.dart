@@ -45,7 +45,8 @@ class _PreviewState extends State<Preview> {
                 ? VideoPlayer(_controller)
                 : const Center(
                     child: CircularProgressIndicator(
-                        backgroundColor: Colors.white),
+                      backgroundColor: Colors.white,
+                    ),
                   ),
           ),
         ),
