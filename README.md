@@ -15,8 +15,7 @@
     - flutter ffmpeg video editor and text watermark to video
     - video editor using ffmpeg
 
-- Video Title: Flutter video trimmer, video player - how to edit, format in ffmpeg or trim video in
-  flutter
+- Video Title: Flutter video trimmer, video player - how to edit, format in ffmpeg or trim video in flutter
 
 ## 2. Research: Competitors
 
@@ -242,7 +241,8 @@
                 ? VideoPlayer(_controller)
                 : const Center(
                     child: CircularProgressIndicator(
-                        backgroundColor: Colors.white),
+                        backgroundColor: Colors.white,
+                        ),
                   ),
           ),
         ),
